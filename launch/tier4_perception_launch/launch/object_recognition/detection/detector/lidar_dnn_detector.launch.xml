@@ -18,6 +18,7 @@
 
   <!-- short_range Lidar detector parameters -->
   <arg name="use_short_range_detection" default="false" description="use short range detection for redundant VRU detection"/>
+  <arg name="run_short_range_detection_in_same_ecu" default="false" description="run short range detection in the same ecu as the main detection"/>
   <arg name="lidar_short_range_detection_model_type" description="options: `centerpoint_short_range`">
     <choice value="centerpoint_short_range"/>
   </arg>
@@ -55,7 +56,7 @@
     </load_composable_node>
   </group>
   <!-- short_range detection -->
-  <group if="$(var use_short_range_detection)">
+  <group if="$(eval &quot;'$(var use_short_range_detection)' and '$(var run_short_range_detection_in_same_ecu)'&quot;)">
     <!-- short_range CenterPoint -->
     <group if="$(eval &quot;'$(var lidar_short_range_detection_model_type)'=='centerpoint_short_range'&quot;)">
       <let

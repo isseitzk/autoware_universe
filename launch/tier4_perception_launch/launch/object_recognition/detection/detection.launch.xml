@@ -22,6 +22,7 @@
   </arg>
   <arg name="lidar_detection_model_name"/>
   <arg name="use_short_range_detection" description="use short range detection for redundant VRU detection"/>
+  <arg name="run_short_range_detection_in_same_ecu" description="run short range detection in the same ecu as the main detection"/>
   <arg name="lidar_short_range_detection_model_type" description="options: `centerpoint_short_range`">
     <choice value="centerpoint_short_range"/>
   </arg>
@@ -250,6 +251,7 @@
       <arg name="lidar_short_range_detection_model_type" value="$(var lidar_short_range_detection_model_type)"/>
       <arg name="lidar_short_range_detection_model_name" value="$(var lidar_short_range_detection_model_name)"/>
       <arg name="use_short_range_detection" value="$(var use_short_range_detection)"/>
+      <arg name="run_short_range_detection_in_same_ecu" value="$(var run_short_range_detection_in_same_ecu)"/>
       <arg name="output/short_range_objects" value="$(var lidar_ml_detector/output/short_range_objects)"/>
     </include>
   </group>

@@ -49,7 +49,8 @@
   <!-- ML model parameters -->
   <arg name="lidar_detection_model_type" default="$(eval &quot;'$(var lidar_detection_model)'.split('/')[0]&quot;)"/>
   <arg name="lidar_detection_model_name" default="$(eval &quot;'$(var lidar_detection_model)'.split('/')[1] if '/' in '$(var lidar_detection_model)' else ''&quot;)"/>
-  <arg name="use_short_range_detection" default="false" description="use short range detection for redundant VRU detection"/>
+  <arg name="use_short_range_detection" default="true" description="use short range detection for redundant VRU detection"/>
+  <arg name="run_short_range_detection_in_same_ecu" default="false" description="run short range detection in the same ecu as the main detection"/>
   <arg name="lidar_short_range_detection_model_type" default="centerpoint_short_range" description="options: `centerpoint_short_range`">
     <choice value="centerpoint_short_range"/>
   </arg>
@@ -246,6 +247,7 @@
           <arg name="lidar_detection_model_type" value="$(var lidar_detection_model_type)"/>
           <arg name="lidar_detection_model_name" value="$(var lidar_detection_model_name)"/>
           <arg name="use_short_range_detection" value="$(var use_short_range_detection)"/>
+          <arg name="run_short_range_detection_in_same_ecu" value="$(var run_short_range_detection_in_same_ecu)"/>
           <arg name="lidar_short_range_detection_model_type" value="$(var lidar_short_range_detection_model_type)"/>
           <arg name="lidar_short_range_detection_model_name" value="$(var lidar_short_range_detection_model_name)"/>
           <arg name="use_multi_channel_tracker_merger" value="$(var use_multi_channel_tracker_merger)"/>
