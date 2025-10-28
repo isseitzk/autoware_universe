@@ -40,6 +40,7 @@ inline constexpr int64_t EGO_AGENT_PAST_IDX_X = 0;
 inline constexpr int64_t EGO_AGENT_PAST_IDX_Y = 1;
 inline constexpr int64_t EGO_AGENT_PAST_IDX_COS = 2;
 inline constexpr int64_t EGO_AGENT_PAST_IDX_SIN = 3;
+inline constexpr int64_t EGO_AGENT_PAST_IDX_VX = 4;
 
 // Index for each field
 inline constexpr int64_t X = 0;
@@ -68,7 +69,8 @@ inline constexpr std::array<int64_t, 2> TURN_INDICATOR_LOGIT_SHAPE = {1, 4};
 
 inline constexpr std::array<int64_t, 4> SAMPLED_TRAJECTORIES_SHAPE = {
   1, MAX_NUM_AGENTS, OUTPUT_T + 1, POSE_DIM};
-inline constexpr std::array<int64_t, 3> EGO_HISTORY_SHAPE = {1, INPUT_T + 1, POSE_DIM};
+inline constexpr std::array<int64_t, 3> EGO_HISTORY_SHAPE = {
+  1, INPUT_T + 1, 5};  // x, y, cos, sin, vx
 inline constexpr std::array<int64_t, 2> EGO_CURRENT_STATE_SHAPE = {1, 10};
 inline constexpr std::array<int64_t, 4> NEIGHBOR_SHAPE = {1, MAX_NUM_NEIGHBORS, INPUT_T + 1, 11};
 inline constexpr std::array<int64_t, 3> STATIC_OBJECTS_SHAPE = {1, 5, 10};

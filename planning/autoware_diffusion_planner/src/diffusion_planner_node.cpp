@@ -469,9 +469,10 @@ InputDataMap DiffusionPlanner::create_input_data()
   const auto & center_x = static_cast<float>(pose_center.position.x);
   const auto & center_y = static_cast<float>(pose_center.position.y);
   ego_to_map_transform_ = ego_to_map_transform;
+  ego_kinematic_state_ = *ego_kinematic_state;
 
   // Add current state to ego history
-  ego_history_.push_back(pose_center);
+  ego_history_.push_back(*ego_kinematic_state);
   if (ego_history_.size() > static_cast<size_t>(EGO_HISTORY_SHAPE[1])) {
     ego_history_.pop_front();
   }

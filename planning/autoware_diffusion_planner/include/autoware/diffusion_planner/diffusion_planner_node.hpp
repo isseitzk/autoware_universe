@@ -257,7 +257,7 @@ private:
   std::vector<float> replicate_for_batch(const std::vector<float> & single_data);
 
   // ego history for ego_agent_past
-  std::deque<Pose> ego_history_;
+  std::deque<Odometry> ego_history_;
 
   // Turn indicators history for turn_indicators
   std::deque<TurnIndicatorsReport> turn_indicators_history_;

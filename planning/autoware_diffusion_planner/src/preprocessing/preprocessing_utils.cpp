@@ -78,19 +78,19 @@ void normalize_input_data(InputDataMap & input_data_map, const NormalizationMap 
 }
 
 std::vector<float> create_ego_agent_past(
-  const std::deque<geometry_msgs::msg::Pose> & pose_msgs, size_t num_timesteps,
+  const std::deque<nav_msgs::msg::Odometry> & odometry_msgs, size_t num_timesteps,
   const Eigen::Matrix4d & map_to_ego_transform)
 {
-  const size_t features_per_timestep = 4;  // x, y, cos, sin
+  const size_t features_per_timestep = EGO_HISTORY_SHAPE[2];
   const size_t total_size = num_timesteps * features_per_timestep;
 
   std::vector<float> ego_agent_past(total_size, 0.0f);
 
   const size_t start_idx =
-    (pose_msgs.size() >= num_timesteps) ? pose_msgs.size() - num_timesteps : 0;
+    (odometry_msgs.size() >= num_timesteps) ? odometry_msgs.size() - num_timesteps : 0;
 
-  for (size_t i = start_idx; i < pose_msgs.size(); ++i) {
-    const auto & historical_pose = pose_msgs[i];
+  for (size_t i = start_idx; i < odometry_msgs.size(); ++i) {
+    const geometry_msgs::msg::Pose & historical_pose = odometry_msgs[i].pose.pose;
 
     // Convert pose to 4x4 matrix
     const Eigen::Matrix4d pose_map_4x4 = utils::pose_to_matrix4f(historical_pose);
@@ -113,6 +113,7 @@ std::vector<float> create_ego_agent_past(
     ego_agent_past[base_idx + EGO_AGENT_PAST_IDX_Y] = y;
     ego_agent_past[base_idx + EGO_AGENT_PAST_IDX_COS] = cos_yaw;
     ego_agent_past[base_idx + EGO_AGENT_PAST_IDX_SIN] = sin_yaw;
+    ego_agent_past[base_idx + EGO_AGENT_PAST_IDX_VX] = odometry_msgs[i].twist.twist.linear.x;
   }
 
   return ego_agent_past;
