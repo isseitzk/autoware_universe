@@ -81,8 +81,7 @@ std::vector<float> create_ego_agent_past(
   const std::deque<nav_msgs::msg::Odometry> & odometry_msgs, size_t num_timesteps,
   const Eigen::Matrix4d & map_to_ego_transform)
 {
-  const size_t features_per_timestep = EGO_HISTORY_SHAPE[2];
-  const size_t total_size = num_timesteps * features_per_timestep;
+  const size_t total_size = num_timesteps * EGO_AGENT_PAST_DIM;
 
   std::vector<float> ego_agent_past(total_size, 0.0f);
 
@@ -108,7 +107,7 @@ std::vector<float> create_ego_agent_past(
 
     // Store in flat array: [timestep, features]
     const size_t timestep_idx = i - start_idx;
-    const size_t base_idx = timestep_idx * features_per_timestep;
+    const size_t base_idx = timestep_idx * EGO_AGENT_PAST_DIM;
     ego_agent_past[base_idx + EGO_AGENT_PAST_IDX_X] = x;
     ego_agent_past[base_idx + EGO_AGENT_PAST_IDX_Y] = y;
     ego_agent_past[base_idx + EGO_AGENT_PAST_IDX_COS] = cos_yaw;
