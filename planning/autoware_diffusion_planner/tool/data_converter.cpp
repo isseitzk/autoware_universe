@@ -90,7 +90,7 @@ struct TrainingDataBinary
   // Fixed size data arrays
   float ego_agent_past[EGO_HISTORY_SHAPE[1] * EGO_HISTORY_SHAPE[2]];
   float ego_current_state[EGO_CURRENT_STATE_SHAPE[1]];
-  float ego_agent_future[OUTPUT_T * EGO_HISTORY_SHAPE[2]];
+  float ego_agent_future[OUTPUT_T * POSE_DIM];
   float neighbor_agents_past[MAX_NUM_NEIGHBORS * PAST_TIME_STEPS * NEIGHBOR_PAST_DIM];
   float neighbor_agents_future[MAX_NUM_NEIGHBORS * OUTPUT_T * NEIGHBOR_FUTURE_DIM];
   float static_objects[STATIC_OBJECTS_SHAPE[1] * STATIC_OBJECTS_SHAPE[2]];
@@ -295,10 +295,18 @@ void save_binary_data(
   // Copy data to struct
   TrainingDataBinary data;
 
+  std::vector<float> new_ego_agent_future;  // remove dim 4
+  for (size_t t = 0; t < OUTPUT_T; ++t) {
+    new_ego_agent_future.push_back(ego_future[t * EGO_AGENT_PAST_DIM + 0]);  // x
+    new_ego_agent_future.push_back(ego_future[t * EGO_AGENT_PAST_DIM + 1]);  // y
+    new_ego_agent_future.push_back(ego_future[t * EGO_AGENT_PAST_DIM + 2]);  // cos(yaw)
+    new_ego_agent_future.push_back(ego_future[t * EGO_AGENT_PAST_DIM + 3]);  // sin(yaw)
+  }
+
   // Copy vector data to fixed arrays
   std::copy(ego_past.begin(), ego_past.end(), data.ego_agent_past);
   std::copy(ego_current.begin(), ego_current.end(), data.ego_current_state);
-  std::copy(ego_future.begin(), ego_future.end(), data.ego_agent_future);
+  std::copy(new_ego_agent_future.begin(), new_ego_agent_future.end(), data.ego_agent_future);
   std::copy(neighbor_past.begin(), neighbor_past.end(), data.neighbor_agents_past);
   std::copy(neighbor_future.begin(), neighbor_future.end(), data.neighbor_agents_future);
   std::copy(static_objects.begin(), static_objects.end(), data.static_objects);
