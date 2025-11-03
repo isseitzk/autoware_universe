@@ -34,6 +34,7 @@ public:
   using TrafficSignal = autoware_perception_msgs::msg::TrafficLightGroup;
   using TrafficSignalElement = autoware_perception_msgs::msg::TrafficLightElement;
   using Time = rclcpp::Time;
+
   enum class State { APPROACH, GO_OUT };
 
   struct DebugData
@@ -72,7 +73,7 @@ public:
 
 public:
   TrafficLightModule(
-    const int64_t lane_id, const lanelet::TrafficLight & traffic_light_reg_elem,
+    const lanelet::Id lane_id, const lanelet::TrafficLight & traffic_light_reg_elem,
     lanelet::ConstLanelet lane, const lanelet::ConstLineString3d & initial_stop_line,
     const PlannerParam & planner_param, const rclcpp::Logger logger,
     const rclcpp::Clock::SharedPtr clock,
@@ -92,10 +93,7 @@ public:
 
   inline State getTrafficLightModuleState() const { return state_; }
 
-  inline std::optional<int> getFirstRefStopPathPointIndex() const
-  {
-    return first_ref_stop_path_point_index_;
-  }
+  inline std::optional<double> getFirstStopPointArcLength() const { return first_stop_point_s_; }
 
   void updateStopLine(const lanelet::ConstLineString3d & stop_line);
 
@@ -105,10 +103,8 @@ private:
   bool willTrafficLightTurnRedBeforeReachingStopLine(
     const double & distance_to_stop_line, const PlannerData & planner_data) const;
 
-  autoware_internal_planning_msgs::msg::PathWithLaneId insertStopPose(
-    const autoware_internal_planning_msgs::msg::PathWithLaneId & input,
-    const size_t & insert_target_point_idx, const Eigen::Vector2d & target_point,
-    const PlannerData & planner_data);
+  Trajectory insertStopVelocity(
+    const Trajectory & input, const double & stop_point_s, const PlannerData & planner_data);
 
   bool isPassthrough(const double & signed_arc_length, const PlannerData & planner_data) const;
 
@@ -120,7 +116,7 @@ private:
   void updateTrafficSignal(const PlannerData & planner_data);
 
   // Lane id
-  const int64_t lane_id_;
+  const lanelet::Id lane_id_;
 
   // Key Feature
   const lanelet::TrafficLight & traffic_light_reg_elem_;
@@ -144,7 +140,7 @@ private:
   // prevent stop chattering
   std::unique_ptr<Time> stop_signal_received_time_ptr_{};
 
-  std::optional<int> first_ref_stop_path_point_index_;
+  std::optional<double> first_stop_point_s_;
 
   std::optional<Time> traffic_signal_stamp_;
 
